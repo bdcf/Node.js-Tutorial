@@ -1,0 +1,22 @@
+import fs from 'fs';
+
+// Asynchronously read the contents of 'test.txt'
+fs.readFile('./test.txt', 'utf-8', (err, data) => {
+    if (err) throw err;
+    console.log(data);
+});
+
+// Synchronously read the contents of 'test.txt' using UTF-8 encoding
+const data = fs.readFileSync('./test.txt', 'utf-8');
+console.log(data);
+
+// Write to file asynchronously
+fs.writeFile('./test.txt', 'Hello I am writing to this file', (err) => {
+    if (err) throw err;
+    console.log('File written successfully');
+});
+
+fs.appendFile('./test.txt', '\nHello I am appending to this file', (err) => {
+    if (err) throw err;
+    console.log('File appended successfully');
+});
