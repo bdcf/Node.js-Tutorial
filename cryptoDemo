@@ -1,0 +1,27 @@
+import crypto, { createCipheriv, createDecipheriv } from 'crypto';
+
+const hash = crypto.createHash('sha256'); //creates a hash object with SHA-256 algorithm.
+hash.update('password1234'); //hash the password.
+console.log(hash.digest('hex')); //prints the finalized hash in hexadecimal format as a String variable.
+
+//crypto.randomBytes(16, (err, buf) => { //This generates a secure random 16-byte value and prints it in hexadecimal format
+//    if (err) throw err;
+//    console.log(buf.toString('hex'));
+//});
+
+const algorithm = 'chacha20-poly1305';
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(12);
+
+const cipher = crypto.createCipheriv(algorithm, key, iv); // creates a cipher object for encryption using ChaCha20-Poly1305
+let encrypted = cipher.update('Hello, this is a secret message', 'utf-8', 'hex', {authTagLength: 16})
+encrypted += cipher.final('hex');
+console.log('Encrypted:', encrypted);
+
+const authTag = cipher.getAuthTag();
+
+const decipher = crypto.createDecipheriv(algorithm, key, iv); // creates a decipher object for decryption using the same key and IV
+decipher.setAuthTag(authTag);
+let decrypted = decipher.update(encrypted, 'hex', 'utf-8', {authTagLength: 16})
+decrypted += decipher.final('utf-8');
+console.log(decrypted);
